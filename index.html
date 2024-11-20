@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(20, 1fr);
+      gap: 10px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .number {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .taken {
+      background-color: #f08080;
+      color: white;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Available Numbers</h1>
+  <div class="grid" id="numberGrid"></div>
 
+  <script>
+    async function loadNumbers() {
+      // Fetch taken numbers from Google Apps Script
+      const response = await fetch("YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL");
+      const data = await response.json();
+      const takenNumbers = data.takenNumbers;
+
+      const numberGrid = document.getElementById("numberGrid");
+
+      // Create the number grid 000-999
+      for (let i = 0; i <= 999; i++) {
+        const numberString = i.toString().padStart(3, '0'); // Format as "000"
+        const numberDiv = document.createElement("div");
+        numberDiv.className = "number";
+        numberDiv.textContent = numberString;
+
+        // Mark the number as taken if it is found in the takenNumbers array
+        if (takenNumbers.includes(i)) {
+          numberDiv.classList.add("taken");
+        }
+
+        numberGrid.appendChild(numberDiv);
+      }
+    }
+
+    // Load the numbers when the page loads
+    window.onload = loadNumbers;
+  </script>
+</body>
+</html>
